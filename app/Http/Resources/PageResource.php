@@ -15,13 +15,15 @@ class PageResource extends JsonResource
      */
     public function toArray($request)
     {
+        $date_format = $this->created_at->format(Config::get('project.default_date_format'));
+
         return [
             'id' => $this->id,
             'path' => $this->path,
             'title' => $this->title,
             'content' => $this->content,
-            'created_at' => $this->created_at->format(Config::get('pagehits.default_date_format')),
-            'updated_at' => $this->updated_at->format(Config::get('pagehits.default_date_format')),
+            'created_at' => $date_format,
+            'updated_at' => $date_format,
         ];
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\PageCollection;
@@ -18,7 +17,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        return new PageCollection(Page::paginate(Config::get('pagehits.default_objects_per_page')));
+        return new PageCollection(Page::paginate());
     }
 
     /**
