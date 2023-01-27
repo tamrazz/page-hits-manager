@@ -18,7 +18,7 @@ class PageFactory extends Factory
     public function definition()
     {
         $title = $this->faker->sentence(random_int(1, 5));
-        $path_prefix = '/';
+        $path_prefix = '/' . Str::random(random_int(1, 8)) . '/';
         for ($i=0; $i < random_int(0, 3); $i++) {
             $path_prefix .= $this->faker->word() . '/';
         }

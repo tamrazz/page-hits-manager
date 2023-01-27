@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Config;
 
 class PageResource extends JsonResource
 {
@@ -19,8 +20,8 @@ class PageResource extends JsonResource
             'path' => $this->path,
             'title' => $this->title,
             'content' => $this->content,
-            'created_at' => $this->created_at->format('d.m.Y'),
-            'updated_at' => $this->updated_at->format('d.m.Y'),
+            'created_at' => $this->created_at->format(Config::get('pagehits.default_date_format')),
+            'updated_at' => $this->updated_at->format(Config::get('pagehits.default_date_format')),
         ];
     }
 }
