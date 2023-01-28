@@ -19,4 +19,5 @@ class PageHit extends ProjectModel
     {
         return $this->belongsTo(Page::class);
     }
+
 }

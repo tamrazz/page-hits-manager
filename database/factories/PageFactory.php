@@ -25,6 +25,8 @@ class PageFactory extends ProjectFactory
             'path' => $path_prefix . Str::slug($title),
             'title' => $title,
             'content' => $this->faker->text(),
+            'created_at' => $this->randomDate('01.01.2000', '-2 months'),
+            'updated_at' => $this->randomDate('-2 months', 'yesterday'),
         ];
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Page;
-use App\Http\Resources\PageResource;
-use App\Http\Resources\PageCollection;
+use App\Models\PageHit;
+use App\Http\Resources\PageHitResource;
+use App\Http\Resources\PageHitCollection;
 
-class PageController extends Controller
+class PageHitController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        return new PageCollection(Page::paginate());
+        return new PageHitCollection(PageHit::all());
     }
 
     /**
@@ -39,7 +39,7 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        return new PageResource(Page::find($id));
+        // return new PageResource(Page::find($id));
     }
 
     /**
