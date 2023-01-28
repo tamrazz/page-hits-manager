@@ -24,6 +24,7 @@ Route::apiResources([
     'pages' => PageController::class,
 ]);
 
-Route::apiResources([
-    'pageHits' => PageHitController::class,
-]);
+Route::get('/pages/getHits/{id}', [PageController::class, 'getHits']);
+Route::post('/pageHits/{page_id?}', [PageHitController::class, 'add']);
+Route::get('/pageHits', [PageHitController::class, 'list']);
+Route::get('/pageHitsByPeriod', [PageHitController::class, 'listByPeriod']);

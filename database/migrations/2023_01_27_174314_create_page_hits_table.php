@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('page_hits', function (Blueprint $table) {
             $table->id();
-            $table->ipAddress();
+            $table->ipAddress()->nullable();
             $table->foreignId('page_id')->constrained()->onDelete('cascade');
             $table->timestamp('visited_at');
         });

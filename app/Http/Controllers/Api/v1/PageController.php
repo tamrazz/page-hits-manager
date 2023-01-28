@@ -9,6 +9,7 @@ use App\Models\Page;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\PageCollection;
 use App\Http\Filters\PageFilter;
+use App\Http\Resources\PageHitCollection;
 
 class PageController extends Controller
 {
@@ -66,5 +67,19 @@ class PageController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Display Hits of specified Page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getHits(Request $request, $id)
+    {
+        // dd($request->ip_address);
+        $hits = new PageHitCollection(Page::find($id)->pageHits);
+        return $hits;
     }
 }

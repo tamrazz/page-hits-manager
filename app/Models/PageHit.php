@@ -12,6 +12,12 @@ class PageHit extends ProjectModel
     const UPDATED_AT = null;
     const CREATED_AT = 'visited_at';
 
+    protected $fillable = [
+        'page_id',
+        'ip_address',
+        'visited_at',
+    ];
+
     /**
      * Get the Page that owns the PageHits.
      */
