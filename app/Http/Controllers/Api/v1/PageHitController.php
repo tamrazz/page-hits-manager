@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use KodePandai\ApiResponse\ApiResponse;
 use App\Http\Requests\PageHit\PageHitAddRequest;
 use App\Http\Controllers\Controller;
 use App\Models\PageHit;
@@ -19,7 +21,13 @@ class PageHitController extends Controller
      */
     public function list()
     {
-        return new PageHitCollection(PageHit::all());
+        $result_collection = new PageHitCollection(PageHit::all());
+        $result_count = $result_collection->count();
+        return ($result_count)
+            ? ApiResponse::success($result_collection)
+                        ->statusCode(Response::HTTP_OK)
+                        ->message(sprintf('Found %d records', count($result_collection)))
+            : ApiResponse::success()->statusCode(Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -44,12 +52,17 @@ class PageHitController extends Controller
     {
         $page = Page::findOr($page_id, fn() => Page::firstWhere('path', $request->path));
         if (empty($page)) {
-            return 'error';
+            return ApiResponse::error()
+                ->statusCode(Response::HTTP_BAD_REQUEST)
+                ->message('Page with specified parameters not found.');
         }
+
         $data = ['page_id' => $page->id] + $request->validated();
         $page_hit = new PageHitResource(PageHit::create($data));
 
-        return  $page_hit;
+        return ApiResponse::success($page_hit)
+            ->statusCode(Response::HTTP_CREATED)
+            ->message('Hit registered on the page #' . $page->id);
     }
 
 }

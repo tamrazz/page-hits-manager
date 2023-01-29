@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Http\Response;
+use KodePandai\ApiResponse\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Http\Resources\PageResource;
@@ -21,7 +22,13 @@ class PageController extends Controller
     public function index(Request $request)
     {
         $filter = new PageFilter($request->toArray());
-        return new PageCollection(Page::filter($filter)->paginate());
+        $result_collection = new PageCollection(Page::filter($filter)->get());
+        $result_count = $result_collection->count();
+        return ($result_count)
+            ? ApiResponse::success($result_collection)
+                        ->statusCode(Response::HTTP_OK)
+                        ->message(sprintf('Found %d records', count($result_collection)))
+            : ApiResponse::success()->statusCode(Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -32,7 +39,9 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return ApiResponse::error()
+                            ->statusCode(Response::HTTP_METHOD_NOT_ALLOWED)
+                            ->message('This method is not available now.');
     }
 
     /**
@@ -43,7 +52,14 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        return new PageResource(Page::find($id));
+        $page = Page::findOr($id, fn() => null);
+        return (isset($page))
+            ? ApiResponse::success(new PageResource($page))
+                        ->statusCode(Response::HTTP_OK)
+                        ->message('Found page #' . $page->id)
+            : ApiResponse::error()
+                        ->statusCode(Response::HTTP_NOT_FOUND)
+                        ->message('Page not found.');
     }
 
     /**
@@ -55,7 +71,9 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return ApiResponse::error()
+                            ->statusCode(Response::HTTP_METHOD_NOT_ALLOWED)
+                            ->message('This method is not available now.');
     }
 
     /**
@@ -66,7 +84,9 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return ApiResponse::error()
+                            ->statusCode(Response::HTTP_METHOD_NOT_ALLOWED)
+                            ->message('This method is not available now.');
     }
 
     /**

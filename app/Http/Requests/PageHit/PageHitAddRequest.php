@@ -31,7 +31,6 @@ class PageHitAddRequest extends FormRequest
                 'ip',
             ],
             'page_id' => [
-                'required',
                 'numeric',
             ],
             'visited_at' => [
