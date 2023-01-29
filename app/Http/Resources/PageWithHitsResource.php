@@ -16,6 +16,7 @@ class PageWithHitsResource extends ProjectResource
             'page_id' => $this->id,
             'path' => $this->path,
             'hits' => $this->countHits(),
+            'server_time' => $this->getServerTime()->format($this->dateFormat),
             'first_visit' => $this->firstHit()->format($this->dateFormat),
             'last_visit' => $this->lastHit()->format($this->dateFormat),
         ];

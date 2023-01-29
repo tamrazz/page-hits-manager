@@ -74,10 +74,11 @@ class PageHitController extends Controller
      * @param   int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function getHitsByPeriod(Request $request, $id)
+    public function getHitsByParams(Request $request, $id)
     {
         $params = array_merge($request->toArray(), ['pageId' => $id]);
         $page_hits = PageHit::filter(new PageHitFilter($params))->get();
+
         if ($page_hits->isEmpty()) {
             return ApiResponse::error()
                 ->statusCode(Response::HTTP_NOT_FOUND)
@@ -86,8 +87,8 @@ class PageHitController extends Controller
         $page = PageWithHitsResource::constructByHitCollection($page_hits);
 
         return ApiResponse::success($page)
-                    ->statusCode(Response::HTTP_OK)
-                    ->message('Returned hits for page #' . $page->id);
+            ->statusCode(Response::HTTP_OK)
+            ->message('Returned hits for page #' . $page->id);
     }
 
     /**

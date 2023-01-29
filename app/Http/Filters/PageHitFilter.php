@@ -8,6 +8,7 @@ use Carbon\Carbon;
 class PageHitFilter extends AbstractFilter
 {
     public const PAGE_ID = 'pageId';
+    public const IP_ADDRESS = 'ipAddress';
     public const VISITED_BEFORE = 'visitedBefore';
     public const VISITED_AFTER = 'visitedAfter';
 
@@ -15,6 +16,7 @@ class PageHitFilter extends AbstractFilter
     {
         return [
             self::PAGE_ID => [$this, 'pageId'],
+            self::IP_ADDRESS => [$this, 'ipAddress'],
             self::VISITED_BEFORE => [$this, 'visitedBefore'],
             self::VISITED_AFTER => [$this, 'visitedAfter'],
         ];
@@ -25,14 +27,21 @@ class PageHitFilter extends AbstractFilter
         $builder->where('page_id', '=', $value);
     }
 
+    public function ipAddress(Builder $builder, $value)
+    {
+        $builder->where('ip_address', '=', $value);
+    }
+
     public function visitedBefore(Builder $builder, $value)
     {
-        $builder->whereDate('visited_at', '<', new Carbon($value));
+        $carbon = new Carbon($value);
+        $builder->whereDate('visited_at', '<', $carbon->toDateTimeString());
     }
 
     public function visitedAfter(Builder $builder, $value)
     {
-        $builder->whereDate('visited_at', '>=', new Carbon($value));
+        $carbon = new Carbon($value);
+        $builder->whereDate('visited_at', '>=', $carbon->toDateTimeString());
     }
 
 }

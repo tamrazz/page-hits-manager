@@ -45,22 +45,26 @@ class PageFilter extends AbstractFilter
 
     public function craetedBefore(Builder $builder, $value)
     {
-        $builder->whereDate('created_at', '<', new Carbon($value));
+        $carbon = new Carbon($value);
+        $builder->whereDate('created_at', '<', $carbon->toDateTimeString());
     }
 
     public function craetedAfter(Builder $builder, $value)
     {
-        $builder->whereDate('created_at', '>=', new Carbon($value));
+        $carbon = new Carbon($value);
+        $builder->whereDate('created_at', '>=', $carbon->toDateTimeString());
     }
 
     public function updatedBefore(Builder $builder, $value)
     {
-        $builder->whereDate('updated_at', '<', new Carbon($value));
+        $carbon = new Carbon($value);
+        $builder->whereDate('updated_at', '<', $carbon->toDateTimeString());
     }
 
     public function updatedAfter(Builder $builder, $value)
     {
-        $builder->whereDate('updated_at', '>=', new Carbon($value));
+        $carbon = new Carbon($value);
+        $builder->whereDate('updated_at', '>=', $carbon->toDateTimeString());
     }
 
 }

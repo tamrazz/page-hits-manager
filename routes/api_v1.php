@@ -28,6 +28,6 @@ Route::post('/pages/{id}/hit', [PageHitController::class, 'add']);
 Route::post('/pages/addHit', [PageHitController::class, 'add']);
 
 Route::get('/pages/{id}/hits', [PageHitController::class, 'getHits']);
-Route::get('/pages/{id}/hitsByPeriod', [PageHitController::class, 'getHitsByPeriod']);
+Route::get('/pages/{id}/hitsByParams', [PageHitController::class, 'getHitsByParams']);
 
 Route::get('/pages/hits', [PageHitController::class, 'list']);
