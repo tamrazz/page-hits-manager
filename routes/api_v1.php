@@ -24,7 +24,10 @@ Route::apiResources([
     'pages' => PageController::class,
 ]);
 
-Route::get('/pages/getHits/{id}', [PageController::class, 'getHits']);
-Route::post('/pageHits/{page_id?}', [PageHitController::class, 'add']);
-Route::get('/pageHits', [PageHitController::class, 'list']);
-Route::get('/pageHitsByPeriod', [PageHitController::class, 'listByPeriod']);
+Route::post('/pages/{id}/hit', [PageHitController::class, 'add']);
+Route::post('/pages/addHit', [PageHitController::class, 'add']);
+
+Route::get('/pages/{id}/hits', [PageHitController::class, 'getHits']);
+
+Route::get('/pages/hits', [PageHitController::class, 'list']);
+Route::get('/pages/{id}/hitsByPeriod', [PageHitController::class, 'getHitsByPeriod']);

@@ -89,17 +89,4 @@ class PageController extends Controller
                             ->message('This method is not available now.');
     }
 
-    /**
-     * Display Hits of specified Page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function getHits(Request $request, $id)
-    {
-        // dd($request->ip_address);
-        $hits = new PageHitCollection(Page::find($id)->pageHits);
-        return $hits;
-    }
 }
