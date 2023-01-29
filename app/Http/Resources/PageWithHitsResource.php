@@ -20,4 +20,20 @@ class PageWithHitsResource extends ProjectResource
             'last_visit' => $this->lastHit()->format($this->dateFormat),
         ];
     }
+
+    /**
+     * Create a new Page resource by Hit collection.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $resource
+     * @return null|\App\Http\Resources\PageWithHitsResource
+     */
+    public static function constructByHitCollection(\Illuminate\Database\Eloquent\Collection $hits) {
+        try {
+            $page = $hits->firstOrFail()->page;
+        } catch (\Throwable $th) {
+            return null;
+        }
+        $page->pageHits = $hits;
+        return new PageWithHitsResource($page);
+    }
 }

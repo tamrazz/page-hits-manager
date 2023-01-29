@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Page;
+use App\Models\Traits\Filterable;
 
 class PageHit extends ProjectModel
 {
     use HasFactory;
+    use Filterable;
 
     const UPDATED_AT = null;
     const CREATED_AT = 'visited_at';

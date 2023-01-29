@@ -12,6 +12,8 @@ use App\Models\Page;
 use App\Http\Resources\PageWithHitsResource;
 use App\Http\Resources\PageHitResource;
 use App\Http\Resources\PageHitCollection;
+use App\Http\Filters\PageHitFilter;
+use App\Http\Resources\PageWithHitsCollection;
 
 class PageHitController extends Controller
 {
@@ -24,16 +26,17 @@ class PageHitController extends Controller
      */
     public function add(PageHitAddRequest $request, $id = 0)
     {
-        $page = Page::findOr($id, fn() => isset($request->path)
-            ? Page::firstWhere('path', $request->path)
-            : null
-        );
-        if (empty($page)) {
-            return ApiResponse::error()
-                ->statusCode(Response::HTTP_NOT_FOUND)
-                ->message('Page with specified parameters not found.');
+        try {
+            $page = Page::findOrFail($id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e1) {
+            try {
+                $page = Page::where('path', $request->path)->firstOrFail();
+            } catch (\Throwable $e2) {
+                return ApiResponse::error()
+                    ->statusCode(Response::HTTP_NOT_FOUND)
+                    ->message('Page with specified parameters not found.');
+            }
         }
-
         $data = ['page_id' => $page->id] + $request->validated();
         $page_hit = new PageHitResource(PageHit::create($data));
 
@@ -48,20 +51,43 @@ class PageHitController extends Controller
      * @param   int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function getHits($id = 0)
+    public function getHits($id)
     {
-        $page = Page::findOr($id, fn() => null);
-        if (empty($page)) {
+        try {
+            $page = Page::findOrFail($id);
+        } catch (\Throwable $th) {
             return ApiResponse::error()
                 ->statusCode(Response::HTTP_NOT_FOUND)
                 ->message('Page with specified parameters not found.');
         }
-
         $page_with_hits = new PageWithHitsResource($page);
 
         return ApiResponse::success($page_with_hits)
             ->statusCode(Response::HTTP_OK)
             ->message('Returned hits for page #' . $page->id);
+    }
+
+    /**
+     * Get hits for secified page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param   int  $id
+     * @return  \Illuminate\Http\Response
+     */
+    public function getHitsByPeriod(Request $request, $id)
+    {
+        $params = array_merge($request->toArray(), ['pageId' => $id]);
+        $page_hits = PageHit::filter(new PageHitFilter($params))->get();
+        if ($page_hits->isEmpty()) {
+            return ApiResponse::error()
+                ->statusCode(Response::HTTP_NOT_FOUND)
+                ->message('Page with specified parameters not found.');
+        }
+        $page = PageWithHitsResource::constructByHitCollection($page_hits);
+
+        return ApiResponse::success($page)
+                    ->statusCode(Response::HTTP_OK)
+                    ->message('Returned hits for page #' . $page->id);
     }
 
     /**
@@ -79,18 +105,5 @@ class PageHitController extends Controller
                         ->message(sprintf('Found %d records', count($result_collection)))
             : ApiResponse::success()->statusCode(Response::HTTP_NO_CONTENT);
     }
-
-    /**
-     * Return list of Hits of the Page for the specified period.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function listByPeriod(Request $request)
-    {
-        // return
-    }
-
-
 
 }
