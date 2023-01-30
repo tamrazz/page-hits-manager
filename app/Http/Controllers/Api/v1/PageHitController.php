@@ -77,14 +77,14 @@ class PageHitController extends Controller
     public function getHitsByParams(Request $request, $id)
     {
         $params = array_merge($request->toArray(), ['pageId' => $id]);
-        $page_hits = PageHit::filter(new PageHitFilter($params))->get();
-
-        if ($page_hits->isEmpty()) {
+        $pages = $this->getPages($params);
+        try {
+            $page = new PageWithHitsResource($pages->firstOrFail());
+        } catch (\Throwable $th) {
             return ApiResponse::error()
                 ->statusCode(Response::HTTP_NOT_FOUND)
                 ->message('Page with specified parameters not found.');
         }
-        $page = PageWithHitsResource::constructByHitCollection($page_hits);
 
         return ApiResponse::success($page)
             ->statusCode(Response::HTTP_OK)
@@ -94,17 +94,34 @@ class PageHitController extends Controller
     /**
      * Return list of Pages with Hits.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function list()
+    public function list(Request $request)
     {
-        $result_collection = new PageHitCollection(PageHit::all());
-        $result_count = $result_collection->count();
-        return ($result_count)
-            ? ApiResponse::success($result_collection)
-                        ->statusCode(Response::HTTP_OK)
-                        ->message(sprintf('Found %d records', count($result_collection)))
-            : ApiResponse::success()->statusCode(Response::HTTP_NO_CONTENT);
+        $pages = $this->getPages($request->toArray());
+        if ($pages->isEmpty()) {
+            return ApiResponse::error()
+                ->statusCode(Response::HTTP_NOT_FOUND)
+                ->message('No pages found dy specified parameters.');
+        }
+
+        $pages = new PageWithHitsCollection($pages);
+        return ApiResponse::success($pages)
+            ->statusCode(Response::HTTP_OK)
+            ->message(sprintf('Returned %d pages with hits', count($pages)));
+    }
+
+    /**
+     * Get hits for secified page.
+     *
+     * @param  array  $params
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function getPages(array $params)
+    {
+        $pages = Page::withWhereHas('pageHits', fn($q) => $q->filter(new PageHitFilter($params)))->get();
+        return $pages;
     }
 
 }

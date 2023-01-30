@@ -20,10 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResources([
-    'pages' => PageController::class,
-]);
-
 Route::post('/pages/{id}/hit', [PageHitController::class, 'add']);
 Route::post('/pages/addHit', [PageHitController::class, 'add']);
 
@@ -31,3 +27,5 @@ Route::get('/pages/{id}/hits', [PageHitController::class, 'getHits']);
 Route::get('/pages/{id}/hitsByParams', [PageHitController::class, 'getHitsByParams']);
 
 Route::get('/pages/hits', [PageHitController::class, 'list']);
+
+Route::apiResource('pages', PageController::class);

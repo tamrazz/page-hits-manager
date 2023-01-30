@@ -23,18 +23,27 @@ class PageWithHitsResource extends ProjectResource
     }
 
     /**
-     * Create a new Page resource by Hit collection.
-     *
-     * @param  \Illuminate\Database\Eloquent\Collection  $resource
-     * @return null|\App\Http\Resources\PageWithHitsResource
+     * Get number of Hits.
      */
-    public static function constructByHitCollection(\Illuminate\Database\Eloquent\Collection $hits) {
-        try {
-            $page = $hits->firstOrFail()->page;
-        } catch (\Throwable $th) {
-            return null;
-        }
-        $page->pageHits = $hits;
-        return new PageWithHitsResource($page);
+    public function countHits()
+    {
+        return count($this->pageHits);
     }
+
+    /**
+     * Get first Hit.
+     */
+    public function firstHit()
+    {
+        return $this->pageHits->min('visited_at');
+    }
+
+    /**
+     * Get first Hit.
+     */
+    public function lastHit()
+    {
+        return $this->pageHits->max('visited_at');
+    }
+
 }

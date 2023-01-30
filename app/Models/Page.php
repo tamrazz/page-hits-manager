@@ -19,28 +19,4 @@ class Page extends ProjectModel
         return $this->hasMany(PageHit::class);
     }
 
-    /**
-     * Get number of Hits.
-     */
-    public function countHits()
-    {
-        return count($this->pageHits);
-    }
-
-    /**
-     * Get first Hit.
-     */
-    public function firstHit()
-    {
-        return $this->pageHits->min('visited_at');
-    }
-
-    /**
-     * Get first Hit.
-     */
-    public function lastHit()
-    {
-        return $this->pageHits->max('visited_at');
-    }
-
 }
