@@ -10,16 +10,25 @@
 
 ## Инструкция по развертыванию
 * Клонировать репозиторий в произвольную директорию на сервере.
-git clone git@github.com:tamrazz/page-hits-manager.git
+
+`git clone git@github.com:tamrazz/page-hits-manager.git`
+
 * Из директории проекта запустить контейнеры. При первом развертывании займет определенное время.
-./vendor/bin/sail up
+
+`./vendor/bin/sail up`
+
 * Запустить миграции с генерацией тестовых данных.
-./vendor/bin/sail php artisan migrate --seed
-* Приложение готово к использованию. Доступно по адресу *http://localhost/*
+
+`./vendor/bin/sail php artisan migrate --seed`
+
+* Приложение готово к использованию. Доступно по адресу 
+*http://localhost/*
 
 ## Инструкция по использованию
 Для проверки подготовлена Postman коллекция с документацией. Необходимые ендпоинты находятся в папке PagesHits.
+
 https://www.postman.com/orbital-module-observer-94302845/workspace/tamrazyanpublic/collection/16534883-aa38bac6-8280-48b5-9d4b-5863ba8d2026?action=share&creator=16534883
+
 В представленной коллекции все сконфигурировано для работы с Докер-контейнером, описаном выше.
 
 ## Постановка от бизнеса
