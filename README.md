@@ -13,23 +13,34 @@
 
 `git clone git@github.com:tamrazz/page-hits-manager.git`
 
+* Остановить сервис mysql
+
+`sudo service mysql stop`
+
 * Из директории проекта запустить контейнеры. При первом развертывании займет определенное время.
 
 `./vendor/bin/sail up`
 
-* Запустить миграции с генерацией тестовых данных в контейнере.
+* Запустить миграции с генерацией тестовых данных в контейнере. Так как приложение запускается в контейнере, то в проект был добавлен настроенный .env файл. Дополнительно настраивать ничего не нужно.
 
 `./vendor/bin/sail php artisan migrate --seed`
 
 * Приложение готово к использованию. Доступно по адресу 
 *http://localhost/*
 
+### Возможная проблема
+> => ERROR [internal] load metadata for docker.io/library/ubuntu:18.04 
+
+Решение [тут](https://stackoverflow.com/questions/65896681/exec-docker-credential-desktop-exe-executable-file-not-found-in-path)
+
 ## Инструкция по использованию
 Для проверки подготовлена Postman коллекция с документацией. Необходимые ендпоинты находятся в папке PagesHits.
 
-https://www.postman.com/orbital-module-observer-94302845/workspace/tamrazyanpublic/collection/16534883-aa38bac6-8280-48b5-9d4b-5863ba8d2026?action=share&creator=16534883
+[Page Hits Manager -- Postman collection](https://www.postman.com/orbital-module-observer-94302845/workspace/tamrazyanpublic/collection/16534883-aa38bac6-8280-48b5-9d4b-5863ba8d2026?action=share&creator=16534883)
 
 В представленной коллекции все сконфигурировано для работы с Докер-контейнером, описаном выше.
+
+****
 
 ## Постановка от бизнеса
 
