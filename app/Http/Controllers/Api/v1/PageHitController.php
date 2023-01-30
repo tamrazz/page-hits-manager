@@ -11,7 +11,6 @@ use App\Models\PageHit;
 use App\Models\Page;
 use App\Http\Resources\PageWithHitsResource;
 use App\Http\Resources\PageHitResource;
-use App\Http\Resources\PageHitCollection;
 use App\Http\Filters\PageHitFilter;
 use App\Http\Resources\PageWithHitsCollection;
 
@@ -120,7 +119,13 @@ class PageHitController extends Controller
      */
     private function getPages(array $params)
     {
-        $pages = Page::withWhereHas('pageHits', fn($q) => $q->filter(new PageHitFilter($params)))->get();
+        $pages = cache()->remember(
+            key : json_encode($params),
+            ttl : now()->addMinutes(config('project.cache_ttl')),
+            callback : function() use ($params) {
+                return Page::withWhereHas('pageHits', fn($q) => $q->filter(new PageHitFilter($params)))->get();
+            }
+        );
         return $pages;
     }
 
