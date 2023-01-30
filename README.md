@@ -1,66 +1,57 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HTTP-API Сервис подсчета просмотров страницы
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Системные требования
+Приложение развертывается в собственном виртуальном окружении, поэтому все, что понадобится для его проверки:
+* Установленный на сервере Docker / Docker compose актуальной версии
+* Bash-терминал
 
-## About Laravel
+## О приложении
+Написано на фреймворке Laravel 9. В сборку также входит программа для автоматического развертывания приложения Sail и ряд вспомогательных пакетов, которые подтянет composer при деплое. Согласно ТЗ в приложении реализовано кеширование некоторых запросов (кеш хранится в файле), а также защита определенных роутов (реализовано с помощью Middleware и Bearer токена).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Инструкция по развертыванию
+* Клонировать репозиторий в произвольную директорию на сервере.
+git clone git@github.com:tamrazz/page-hits-manager.git
+* Из директории проекта запустить контейнеры. При первом развертывании займет определенное время.
+./vendor/bin/sail up
+* Запустить миграции с генерацией тестовых данных.
+./vendor/bin/sail php artisan migrate --seed
+* Приложение готово к использованию. Доступно по адресу *http://localhost/*
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Инструкция по использованию
+Для проверки подготовлена Postman коллекция с документацией. Необходимые ендпоинты находятся в папке PagesHits.
+https://www.postman.com/orbital-module-observer-94302845/workspace/tamrazyanpublic/collection/16534883-aa38bac6-8280-48b5-9d4b-5863ba8d2026?action=share&creator=16534883
+В представленной коллекции все сконфигурировано для работы с Докер-контейнером, описаном выше.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Постановка от бизнеса
 
-## Learning Laravel
+Нужно знать сколько было просмотров страниц за конкретный период для анализа трафика.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Задача
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Нужно написать API-сервис для js-клиента, который будет хранить и выводить кол-во просмотров для страниц.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Полные пути к эндпоинтам и их название остаются на ваше усмотрение, в задании эндпоинты указаны в качестве примера для понимания и могут быть не совсем правильные или логичные,  мы хотим узнать, как вы будете организовывать архитектуру своего сервиса.
 
-## Laravel Sponsors
+### Сервис должен выполнять следующие функции
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+1. Инкремент для конкретной страницы. Пример `POST::/api/page/inrcement BODY:{"path":"/some-subpage/subpage"}`.
+2. Получение кол-ва просмотров по конкретной странице за весь период. Пример `POST::/api/page/get-views/all BODY:{"path":"/another-page/path"}`. За весь период эндпоинт должен быть публичным.
+3. Получение кол-ва просмотров по конкретной странице за день/неделю/месяц/год/весь период. Пример `POST::/api/page/get-views BODY:{"path":"/another-page/path", "period":"all"}`. По периодам эндпоинт должен быть закрытым.
+4. Получение списка страниц с количеством просмотров за заданный период. Пример `PUT::/report/2021-01-12/to/2021-01-24`. Должен быть закрытым.
 
-### Premium Partners
+### Дополнительно
+1. Ответы на получение просмотров по страницам можно кэшировать.
+2. Дополнительная запись уникальных просмотров на основе ip-адреса и возможность получение информации о странице как с уникальными просмотрами, так и всех просмотров.
+3. Если будут тесты, то хорошо.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Должна быть хоть какая-то понятная документация. Хоть примеры в виде curl, коллекция postman, OAS.
+Должна быть инструкция по установке. Можно использовать докер, но только рабочий, пожалуйста провреяйте докер-образ при различных условиях. "У меня такая же нога и не болит" -- нас не устраивает:).
 
-## Contributing
+## На чём писать
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- [Laravel framework](https://laravel.com/)
+- PHP 8.1.* или любая другая версия с кодом совместимым с пхп8.1. Если в composer.json указано php: ">=7.3", значит все должно работать как на пхп7.3, так и на пхп 8.1
+- В качестве БД mariadb 10.4(предпочтительнее), postgresql 13, sqlite(лучше не стоит, но для тестов можно:))
+- В качестве провайдера кэша, что угодно: redis, memcached, файловый - , глвное делать через фасад ларавеля, чтобы работало на различных провайдерах.
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Если что-то непонятно или требует уточнения обращайтесь к нашему HR-специалисту. Мы будем уточнять задание. Если в чём-то не уверены, то тоже обращайтесь**

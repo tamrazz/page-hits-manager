@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe33f98a750b8c5a51b30c78bd3fab21",
+    "content-hash": "f98941f91e1a15dd27bf2623ab922f3f",
     "packages": [
         {
             "name": "brick/math",
@@ -896,6 +896,61 @@
                 }
             ],
             "time": "2022-10-26T14:07:24+00:00"
+        },
+        {
+            "name": "kodepandai/laravel-api-response",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kodepandai/laravel-api-response.git",
+                "reference": "ee49ba07a96893a1e1c8a2d4ac2ff266ad6a92da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kodepandai/laravel-api-response/zipball/ee49ba07a96893a1e1c8a2d4ac2ff266ad6a92da",
+                "reference": "ee49ba07a96893a1e1c8a2d4ac2ff266ad6a92da",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^7.0|^8.0|^9.0",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "orchestra/testbench": "^5.0|^6.0|^7.0",
+                "pestphp/pest": "^1.2",
+                "pestphp/pest-plugin-laravel": "^1.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "KodePandai\\ApiResponse\\ApiResponseServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "KodePandai\\ApiResponse\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Api Response helper for laravel.",
+            "homepage": "https://github.com/kodepandai/laravel-api-response",
+            "keywords": [
+                "api",
+                "helper",
+                "laravel",
+                "response"
+            ],
+            "support": {
+                "issues": "https://github.com/kodepandai/laravel-api-response/issues",
+                "source": "https://github.com/kodepandai/laravel-api-response/tree/v1.3.1"
+            },
+            "time": "2022-12-23T01:55:13+00:00"
         },
         {
             "name": "laravel/framework",
